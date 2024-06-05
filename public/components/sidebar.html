@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sidebar</title>
+  <link href="../assets/css/output.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
+  <style>
+    #sidebar {
+      transition: width 0.3s ease, padding 0.3s ease;
+      overflow: hidden;
+    }
+
+    .sidebar-expanded {
+      width: 280px;
+      /* Adjust as needed */
+    }
+
+    .sidebar-collapsed {
+      width: 0;
+      padding: 0;
+    }
+
+    .sidebar-collapsed nav ul {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar-expanded nav ul {
+      opacity: 1;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+  <div>
+    <div class="relative mt-6 ml-4 z-20 tham tham-e-spin tham-w-8">
+      <div class="tham-box">
+        <div class="tham-inner"></div>
+      </div>
+    </div>
+  </div>
+  <aside id="sidebar"
+    class="backdrop-blur fixed z-10 flex items-center top-0 min-h-screen w-0 bg-slate-200 shadow shadow-slate-400 sidebar-collapsed">
+    <nav class="w-full text-2xl font-extralight">
+      <ul class="cursor-pointer">
+        <li class="py-4 pl-8 hover:bg-slate-50"><a href="#">Monitor</a></li>
+        <li class="py-4 pl-8 hover:bg-slate-50"><a href="#">Approve</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <div class="px-4 mt-8 grid place-items-center">
+    <hgroup class="text-center">
+      <h1 class="text-4xl font-medium">DORRAFY ADMIN</h1>
+    </hgroup>
+    <div id="utility-bar" class="flex flex-col gap-4 my-4 md:flex-row w-full max-w-4xl">
+      <div class="w-full">
+        <form class="md:max-w-md md:mr-auto">
+          <label for="searchbar" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
+              <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+              </svg>
+            </div>
+            <input type="text" id="searchbar"
+              class="block w-full p-4 text-sm text-gray-900 transition-colors ease-in-out border border-gray-300 rounded-full appearance-none duration-50 ps-10 bg-gray-50 focus:ring-orange-500 focus:border-orange-500 caret-orange-500"
+              placeholder="Search students..." />
+          </div>
+        </form>
+      </div>
+      <div class="relative flex items-center md:justify-evenly w-full gap-4">
+        <!-- Filter -->
+        <div id="filter-container" class="relative flex justify-end w-full md:w-max">
+          <button id="filter-dropdown-button"
+            class="flex items-center justify-between w-full gap-6 px-4 py-2 text-center border rounded bg-slate-50 border-slate-300 focus:ring-slate-500 main-btn">
+            <span class="text-sm font-medium text-slate-500">
+              Filter By
+            </span>
+            <svg class="w-4 h-4 stroke-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div id="filter-dropdown"
+            class="absolute left-0 z-10 hidden p-4 pl-6 border rounded-lg shadow md:right-0 md:left-auto top-12 bg-slate-50 min-w-68 w-max border-slate-300">
+            <div class="mb-2">
+              <span class="text-sm font-medium text-slate-700">Document Type</span>
+            </div>
+            <div id="filter-options" class="grid grid-cols-1 gap-2">
+              <span class="flex justify-center w-full h-5 py-8 items-left"><svg class="animate-spin"
+                  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20">
+                  <path fill="#000000"
+                    d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
+                </svg></span>
+              <!-- Options here -->
+            </div>
+            <div class="flex justify-end gap-2 mt-8">
+              <button id="apply-filter-button"
+                class="px-6 py-1 transition-colors duration-100 ease-in-out bg-orange-500 rounded hover:bg-orange-600 focus:ring-orange-500">
+                <span class="text-sm text-slate-50"> Apply </span>
+              </button>
+              <button id="reset-filter-button"
+                class="px-6 py-1 transition-colors duration-100 ease-in-out border rounded bg-slate-50 border-slate-200 focus:ring-orange-400 hover:border-orange-400">
+                <span class="text-sm"> Reset </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Sorter -->
+        <div id="sort-container" class="relative flex justify-end w-full md:w-max">
+          <button id="sort-dropdown-button"
+            class="flex items-center justify-between w-full gap-6 px-4 py-2 text-center border rounded bg-slate-50 border-slate-300 focus:ring-slate-500 main-btn">
+            <span class="text-sm font-medium text-slate-500">Sort By</span>
+            <svg class="w-4 h-4 stroke-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div id="sort-dropdown"
+            class="absolute right-0 z-10 hidden p-4 pl-6 border rounded-lg shadow top-12 bg-slate-50 min-w-68 w-max border-slate-300"
+            data-checked-values>
+            <div class="mb-2">
+              <span class="text-sm font-medium text-slate-700">Sort Options</span>
+            </div>
+            <div id="sort-options" class="grid grid-cols-1 gap-2">
+              <span class="flex justify-center w-full h-5 py-8 items-left">
+                <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20"
+                  height="20">
+                  <path fill="#000000"
+                    d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
+                </svg>
+              </span>
+            </div>
+            <div class="flex justify-end gap-2 mt-8">
+              <button id="apply-sort-button"
+                class="px-6 py-1 transition-colors duration-100 ease-in-out bg-orange-500 rounded hover:bg-orange-600 focus:ring-orange-500">
+                <span class="text-sm text-slate-50">Apply</span>
+              </button>
+              <button id="reset-sort-button"
+                class="px-6 py-1 transition-colors duration-100 ease-in-out border rounded bg-slate-50 border-slate-200 focus:ring-orange-400 hover:border-orange-400">
+                <span class="text-sm">Reset</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="mobile-layout" class="block lg:hidden min-h-96">
+        <div class="grid w-full grid-cols-1 gap-3 p-2 place-content-stretch md:grid-cols-2 lg:hidden bg-slate-200">
+          <div class="items-center justify-between h-full gap-4 p-2 rounded-lg shadow-lg bg-slate-50">
+            <div class="text-sm py-2 px-4">
+              <span class="font-semibold">Window Section:</span> Fe Anne Sanchez
+            </div>
+            <hr />
+            <div class="relative flex flex-col justify-between place-self-stretch py-2 px-4">
+              <span class="text-lg font-bold">Transcript of Records</span>
+              <span class="text-sm opacity-85">June 04, 2024 </span>
+              <span class="mb-2 text-sm opacity-75">Uzziel Kyle Ynciong</span>
+              <div
+                class="absolute badge top-2 right-2 grid place-content-center rounded-full bg-green-500 w-fit px-4 py-2 min-w-8 h-8">
+                <span class="text-sm text-white">
+                  Completed
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="items-center justify-between h-full gap-4 p-2 rounded-lg shadow-lg bg-slate-50">
+            <div class="text-sm py-2 px-4">
+              <span class="font-semibold">DPS:</span> Sadang Pia Jane
+            </div>
+            <hr />
+            <div class="relative flex flex-col justify-between place-self-stretch py-2 px-4">
+              <span class="text-lg font-bold">Copy of Grades</span>
+              <span class="text-sm opacity-85">May 31, 2024 </span>
+              <span class="mb-2 text-sm opacity-75">Fernando Pineda Jr.</span>
+              <div
+                class="absolute badge top-2 right-2 grid place-content-center rounded-full bg-orange-500 w-fit px-4 py-2 min-w-8 h-8">
+                <span class="text-sm text-white">
+                  Ongoing
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="items-center justify-between h-full gap-4 p-2 rounded-lg shadow-lg bg-slate-50">
+            <div class="text-sm py-2 px-4">
+              <span class="font-semibold">Evaluation Section:</span> Filipinas Melinda
+            </div>
+            <hr />
+            <div class="relative flex flex-col justify-between place-self-stretch py-2 px-4">
+              <span class="text-lg font-bold">Copy of Grades</span>
+              <span class="text-sm opacity-85">May 30, 2024 </span>
+              <span class="mb-2 text-sm opacity-75">Jian Z'car Esteban</span>
+              <div
+                class="absolute badge top-2 right-2 grid place-content-center rounded-full bg-red-500 w-fit px-4 py-2 min-w-8 h-8">
+                <span class="text-sm text-white">
+                  Rejected
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="items-center justify-between h-full gap-4 p-2 rounded-lg shadow-lg bg-slate-50">
+            <div class="text-sm py-2 px-4">
+              <span class="font-semibold">Admin Registrar:</span> Jerome Dagot
+            </div>
+            <hr />
+            <div class="relative flex flex-col justify-between place-self-stretch py-2 px-4">
+              <span class="text-lg font-bold">Certifications</span>
+              <span class="text-sm opacity-85">June 06, 2024 </span>
+              <span class="mb-2 text-sm opacity-75">Carlos Miguel Heredero</span>
+              <div
+                class="absolute badge top-2 right-2 grid place-content-center rounded-full bg-blue-500 w-fit px-4 py-2 min-w-8 h-8">
+                <span class="text-sm text-white">
+                  New
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+<script>
+  $(".tham").click(function () {
+    $(this).toggleClass("tham-active");
+    $("#sidebar").toggleClass("sidebar-expanded sidebar-collapsed");
+  });
+</script>
+
+</html>

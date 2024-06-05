@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../assets/css/output.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+    />
+    <title>sort</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body class="grid min-h-screen place-items-center">
+    <div id="filter-container" class="relative flex justify-end w-max">
+      <button
+        id="filter-dropdown-button"
+        class="flex items-center justify-between gap-6 px-4 py-2 text-center border rounded border-slate-500 focus:ring-slate-500"
+      >
+        <span class="text-sm font-medium text-slate-500"> Filter By </span>
+        <svg
+          class="w-4 h-4 stroke-slate-500"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+      <div
+        id="filter-dropdown"
+        class="absolute z-10 hidden p-4 mt-12 border rounded shadow border-slate-500 min-w-68 w-max"
+        data-checked-values
+      >
+        <div class="mb-2">
+          <span class="text-sm font-medium text-slate-700">Document Type</span>
+        </div>
+        <div id="filter-options" class="grid grid-cols-1 gap-2">
+          <span class="flex justify-center w-full h-5 py-8 items-left"
+            ><svg
+              class="animate-spin"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+              width="20"
+              height="20"
+            >
+              <path
+                fill="#000000"
+                d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"
+              /></svg
+          ></span>
+          <!-- Options here -->
+        </div>
+        <div class="flex justify-end gap-2 mt-8">
+          <button
+            id="apply-filter-button"
+            class="px-6 py-1 transition-colors duration-100 ease-in-out bg-orange-500 rounded hover:bg-orange-600 focus:ring-orange-500"
+          >
+            <span class="text-sm text-slate-50"> Apply </span>
+          </button>
+          <button
+            id="reset-filter-button"
+            class="px-6 py-1 transition-colors duration-100 ease-in-out border rounded bg-slate-50 border-slate-200 focus:ring-orange-400 hover:border-orange-400"
+          >
+            <span class="text-sm"> Reset </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    getRequests().then((data) => {
+      let dropdown_options_data = data["groupCounts"];
+
+      var dropdown_options = "";
+      dropdown_options_data.forEach((data) => {
+        dropdown_options += `
+                <div class="flex items-center gap-2 pr-8">
+                <input type="checkbox" name="filter-1"
+                    class="text-orange-500 transition-colors duration-75 ease-in-out rounded focus:ring-orange-500 hover:cursor-pointer " value=${data["iddocs"]} />
+                <label for="filter-${data["iddocs"]}" class="text-sm text-slate-700">${data["docname"]} <sup>(${data["count"]})</sup></label>
+                </div>`;
+      });
+
+      $("#filter-options").html(dropdown_options);
+    });
+
+    $("#filter-dropdown-button").click(function () {
+      $("#filter-dropdown").toggle();
+      $("#sorter-dropdown").hide();
+    });
+
+    $("#reset-filter-button").click(function () {
+      // Uncheck all checkboxes
+      $("#filter-options input[type='checkbox']").prop("checked", false);
+    });
+
+    $(document).on("click", function (event) {
+      if (!$(event.target).closest("#filter-container").length) {
+        closeFilterDropdown();
+      }
+    });
+
+    // Function to close the filter dropdown
+    function closeFilterDropdown() {
+      $("#filter-dropdown").hide();
+    }
+
+    // Function to log checked values when clicking Apply
+    $("#apply-filter-button").click(function () {
+      closeFilterDropdown();
+      var checkedValues = [];
+
+      $("#filter-options input[type='checkbox']:checked").each(function () {
+        checkedValues.push($(this).val());
+      });
+
+      // Convert the array to a string separated by commas
+      let checkedValuesString = checkedValues.join(",");
+      console.log(checkedValuesString);
+      console.log("Checked Values:", checkedValues);
+
+      $("#filter-dropdown").data("checked-values", checkedValues);
+
+      filter = checkedValuesString;
+      updatePage();
+    });
+
+    var requestAJAX;
+
+    async function getRequests() {
+      if (requestAJAX != null) {
+        requestAJAX.abort();
+      }
+
+      requestAJAX = $.getJSON("includes/get_requests.php");
+
+      let requests = await requestAJAX;
+
+      requestAJAX = null;
+
+      return requests;
+    }
+  </script>
+</html>
